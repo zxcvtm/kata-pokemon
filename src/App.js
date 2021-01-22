@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const list = [
@@ -10,11 +10,26 @@ const list = [
 ]
 
 const App = () => {
-  axios.get('https://pokeapi.co/api/v2/pokemon?limit=100&offset=200')
-  .then(response => console.log('response: ', response))
-  .catch(error => console.log('error: ', error))
 
   const [pokemonList, setPokemonList] = useState(list)
+  const [isFirstRender, setIsFisrtRender] = useState(true)
+  useEffect(() => {
+    if (isFirstRender) {
+      setIsFisrtRender(false)
+      axios.get('https://pokeapi.co/api/v2/pokemon?limit=100&offset=200')
+        .then(parsePokemon)
+        .catch(error => console.log('error: ', error))
+    }
+  })
+
+  const parsePokemon = data => {
+    console.log('mostrando data: ',data)
+    const tempList = [...pokemonList, ...data.data.results]
+    setPokemonList(tempList)
+  }
+
+  
+  
 
   const addPokemon = () => {
     console.log('add pokemon is called')
