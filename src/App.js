@@ -1,23 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
+const App = () => {
+  const list = [
+    {name: 'pikachu', url: 'x'},
+    {name: 'charmander', url: 'x'},
+    {name: 'ditto', url: 'x'},
+    {name: 'cubone', url: 'x'},
+  ]
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{margin: '1rem'}}>
+      <h1>Kata Pokemon</h1>
+      {list.map((pokemon, index) => (
+        <div key={index}>
+          <span>{pokemon.name}</span>
+        </div>
+      ))}
     </div>
   );
 }
