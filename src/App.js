@@ -2,17 +2,12 @@ import './App.css';
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const list = [
-    {name: 'pikachu', url: 'x'},
-    {name: 'charmander', url: 'x'},
-    {name: 'ditto', url: 'x'},
-    {name: 'cubone', url: 'x'},
-]
-
 const App = () => {
 
-  const [pokemonList, setPokemonList] = useState(list)
+  const [pokemonList, setPokemonList] = useState([])
   const [isFirstRender, setIsFisrtRender] = useState(true)
+  const [pokemonData, setPokemonData] = useState({})
+
   useEffect(() => {
     if (isFirstRender) {
       setIsFisrtRender(false)
@@ -28,12 +23,20 @@ const App = () => {
     setPokemonList(tempList)
   }
 
-  
-  
-
   const addPokemon = () => {
     console.log('add pokemon is called')
     setPokemonList([...pokemonList, {name: 'arbok', url: 'x'}])
+  }
+
+  const parseDescription = ({data}) => {
+    const {name, types, sprites } = data 
+    setPokemonData({name, types, sprites})
+  }
+
+  const getDescription = (url) => {
+    axios.get(url)
+        .then(parseDescription)
+        .catch(error => console.log('error: ', error))
   }
 
   return (
@@ -41,7 +44,18 @@ const App = () => {
       <h1>Kata Pokemon</h1>
       {pokemonList.map((pokemon, index) => (
         <div key={index} style={{margin: '1rem 0', border: '1px solid black', padding: '1rem'}}>
-          <span>{pokemon.name}</span>
+          <button onClick={() =>getDescription(pokemon.url)}>{pokemon.name}</button>
+        {pokemon.name === pokemonData.name && 
+          <div>
+            <p>Descripción</p>
+            <p>{pokemonData.name}</p>
+            <ul>{pokemonData.types && pokemonData.types.map((type, index) => (
+                <li key={index}>{type.type.name}</li>
+              ))}
+            </ul>
+            <img src={pokemonData.sprites.front_default}/>
+          </div>
+        }
         </div>
       ))}
       <button onClick={addPokemon}>Agregar Pokemon</button>
